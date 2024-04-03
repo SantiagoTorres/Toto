@@ -41,7 +41,7 @@ import securesystemslib.exceptions
 import securesystemslib.formats
 import securesystemslib.gpg
 import securesystemslib.hash
-from securesystemslib.signer import Key, Signature, Signer, SSlibSigner
+from securesystemslib.signer import Signature, Signer, SSlibSigner
 
 import in_toto.exceptions
 import in_toto.settings
@@ -398,13 +398,6 @@ def in_toto_mock(name, link_cmd_args, use_dsse=False):
 def _check_signer(signer):
     if not isinstance(signer, Signer):
         raise ValueError("signer must be a Signer instance")
-
-    if not (
-        hasattr(signer, "public_key") and isinstance(signer.public_key, Key)
-    ):
-        # TODO: add `public_key` to `Signer` interface upstream
-        # see secure-systems-lab/securesystemslib#605
-        raise ValueError("only Signer instances with public key supported")
 
 
 def _require_signing_arg(signer, signing_key, gpg_keyid, gpg_use_default):

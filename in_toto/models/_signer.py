@@ -137,6 +137,10 @@ class GPGSigner(Signer):
         self.keyid = keyid
         self.homedir = homedir
 
+    @property
+    def public_key(self) -> Key:
+        raise NotImplementedError  # pragma: no cover
+
     @classmethod
     def from_priv_key_uri(
         cls,
