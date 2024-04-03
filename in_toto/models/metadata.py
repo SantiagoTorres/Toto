@@ -160,7 +160,7 @@ class Envelope(SSlibEnvelope, Metadata):
         return cls(
             payload=json_bytes,
             payload_type=ENVELOPE_PAYLOAD_TYPE,
-            signatures=[],
+            signatures={},
         )
 
     def create_signature(self, signer: Signer) -> Signature:

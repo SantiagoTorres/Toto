@@ -72,7 +72,7 @@ def _sign_and_dump_metadata(metadata, args):
 
     try:
         if not args.append:
-            metadata.signatures = []
+            metadata.signatures.clear()
 
         signature = None
         # If the cli tool was called with `--gpg [KEYID ...]` `args.gpg` is

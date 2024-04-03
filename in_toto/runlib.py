@@ -41,7 +41,7 @@ import securesystemslib.exceptions
 import securesystemslib.formats
 import securesystemslib.gpg
 import securesystemslib.hash
-from securesystemslib.signer import Signature, Signer, SSlibSigner
+from securesystemslib.signer import Signer, SSlibSigner
 
 import in_toto.exceptions
 import in_toto.settings
@@ -1040,12 +1040,16 @@ def in_toto_record_stop(
         LOG.info(
             "Verifying preliminary link signature using default gpg key..."
         )
-        # signatures are objects in DSSE.
-        sig = link_metadata.signatures[0]
-        if isinstance(sig, Signature):
-            keyid = sig.keyid
+
+        # The `signatures` field is not part of the common Envelope/Metablock
+        # interface, so we need to case handle. Note that we shouldn't be
+        # accessing `signatures` here in the first place (see FIXME above).
+        if isinstance(link_metadata, Envelope):
+            keyid = link_metadata.signatures.values()[0].keyid
+
         else:
-            keyid = sig["keyid"]
+            keyid = link_metadata.signatures[0]["keyid"]
+
         gpg_pubkey = securesystemslib.gpg.functions.export_pubkey(
             keyid, gpg_home
         )
