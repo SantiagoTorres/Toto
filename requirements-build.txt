@@ -1,2 +1,2 @@
 build==1.2.1
-hatchling==1.22.4
+hatchling==1.22.5
