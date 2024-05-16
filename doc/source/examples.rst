@@ -3,176 +3,6 @@ Usage Examples
 
 This section provides examples demonstrating key features of in-toto, including parameter substitution and layout creation. These examples showcase practical use cases and illustrate how to effectively utilize in-toto's capabilities in supply chain verification and layout management.
 
-Parameter Substitution
------------------------
-
-In-toto's reference implementation provides a powerful mechanism for substituting values in various fields within the supply chain verification process, including the expected_command field in steps and the run field in inspections. This feature allows users to customize commands based on specific conditions or requirements.
-
-Using Substitution in Steps
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Steps performed by a functionary in the supply chain are declared as follows:
-
-.. code-block:: json
-
-    {
-      "_type": "step",
-      "name": "<NAME>",
-      "threshold": "<THRESHOLD>",
-      "expected_materials": [
-         [ "<ARTIFACT_RULE>" ],
-         "..."
-      ],
-      "expected_products": [
-         [ "<ARTIFACT_RULE>" ],
-         "..."
-      ],
-      "pubkeys": [
-         "<KEYID>",
-         "..."
-      ],
-      "expected_command": "<COMMAND>"
-    }
-
-The expected_command field contains a command that suggests the action to be performed. It is important to note that this field supports substitution, allowing users to dynamically adjust commands based on environmental variables or other parameters.
-
-Example Usage:
-~~~~~~~~~~~~~~
-
-Dynamic Path Resolution
-~~~~~~~~~~~~~~~~~~~~~~~
-
-In scenarios where a build step in the supply chain necessitates a dependency whose path varies with the environment, users aim to ensure the correct dependency is utilized during the build process. This objective can be accomplished through the utilization of substitution.
-
-.. code-block:: json
-
-    {
-      "_type": "step",
-      "name": "build",
-      "threshold": 1,
-      "expected_materials": [
-         [ "MATCH /source_code/* WITH PRODUCTS FROM fetch_code" ],
-         [ "MATCH /dependencies/* WITH PRODUCTS FROM fetch_dependencies" ]
-      ],
-      "expected_products": [
-         [ "CREATE /compiled_code/*" ]
-      ],
-      "pubkeys": [
-         "pubkey-1"
-      ],
-      "expected_command": "gcc -o /compiled_code/output -I {{ DEPENDENCY_PATH }}/include <source_file>"
-    }
-
-In this example:
-
-- The expected_command field contains a command to compile the source code.
-- It includes a placeholder {{ DEPENDENCY_PATH }}, representing the path to the dependency.
-- During verification, the placeholder {{ DEPENDENCY_PATH }} will be dynamically replaced with the actual path to the dependency based on the environment.
-
-Using substitution in this manner enables the creation of flexible supply chain layouts that can adapt to various environments and configurations during the verification process.
-
-Using Substitution in Inspections
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-In contrast to steps, inspections indicate operations that need to be performed on the final product at the time of verification. Inspections contain the following fields:
-
-.. code-block:: json
-
-    {
-      "_type": "inspection",
-      "name": "<NAME>",
-      "expected_materials": [
-         [ "<ARTIFACT_RULE>" ],
-         "..."
-      ],
-      "expected_products": [
-         [ "<ARTIFACT_RULE>" ],
-         "..."
-      ],
-      "run": "<COMMAND>"
-    }
-
-Similar to steps, the run field contains a command to be executed. Substitution can be applied to this field to customize the inspection process based on runtime conditions or configuration settings.
-
-Examples Usage
-~~~~~~~~~~~~~~
-
-Dynamic Versioning
-~~~~~~~~~~~~~~~~~~~~~
-
-In a build step, one may need to embed the version number of the software into the compiled binary. Substitution can be used to inject the version number into the build command. For example:
-
-.. code-block:: json
-
-    {
-      "_type": "step",
-      "name": "build",
-      "threshold": 1,
-      "expected_materials": [
-         [ "MATCH /source_code/* WITH PRODUCTS FROM fetch_code" ]
-      ],
-      "expected_products": [
-         [ "CREATE /compiled_code/*" ]
-      ],
-      "pubkeys": [
-         "pubkey-1"
-      ],
-      "expected_command": "gcc -o /compiled_code/output -DVERSION=\"{{ VERSION_NUMBER }}\" <source_file>"
-    }
-
-Here, {{ VERSION_NUMBER }} can be replaced with the actual version number during verification.
-
-Conditional Compilation Flags
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Sometimes, certain features need to be included or excluded from a build based on configuration settings. Substitution can be used to include conditional compilation flags. For example:
-
-.. code-block:: json
-
-    {
-      "_type": "step",
-      "name": "build",
-      "threshold": 1,
-      "expected_materials": [
-         [ "MATCH /source_code/* WITH PRODUCTS FROM fetch_code" ]
-      ],
-      "expected_products": [
-         [ "CREATE /compiled_code/*" ]
-      ],
-      "pubkeys": [
-         "pubkey-1"
-      ],
-      "expected_command": "gcc -o /compiled_code/output {{ COMPILER_FLAGS }} <source_file>"
-    }
-
-Here, {{ COMPILER_FLAGS }} can be replaced with appropriate compiler flags based on the configuration during verification.
-
-Environment-specific Paths
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-If a build process depends on external libraries or tools whose paths may vary across different environments, substitution can be used to specify these paths dynamically. For example:
-
-.. code-block:: json
-
-    {
-      "_type": "step",
-      "name": "build",
-      "threshold": 1,
-      "expected_materials": [
-         [ "MATCH /source_code/* WITH PRODUCTS FROM fetch_code" ]
-      ],
-      "expected_products": [
-         [ "CREATE /compiled_code/*" ]
-      ],
-      "pubkeys": [
-         "pubkey-1"
-      ],
-      "expected_command": "{{ COMPILER_PATH }}/gcc -o /compiled_code/output <source_file>"
-    }
-
-Here, instead of hardcoding the compiler path (/usr/bin/gcc), a placeholder can be used and substituted with the actual path during verification if it varies across environments.
-
-
 Layout Creation Example
 ------------------------
 
@@ -338,3 +168,129 @@ in-toto demo. Take a look at the `demo repo <https://github.com/in-toto/demo>`_ 
     metablock = Metablock(signed=layout)
     metablock.create_signature(alice)
     metablock.dump("root.layout")
+
+Supported Substitution Fields in Layout
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Substitution can be applied to the following fields in the layout:
+
+- Artifact rules (steps and inspections)
+- Expected command attribute (steps)
+- Run attribute (inspections)
+
+To pass substitution parameters to the verification API, provide a dictionary with the substitution values as the `substitution_parameters` argument when calling the `in_toto_verify` function.
+
+Parameter Substitution
+----------------------
+
+In-toto's reference implementation provides a powerful mechanism for substituting values in various fields within the supply chain verification process, including the expected_command field in steps and the run field in inspections. This feature allows users to customize commands based on specific conditions or requirements.
+
+Using Substitution in Steps
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Steps performed by a functionary in the supply chain are declared as follows:
+
+.. code-block:: json
+
+    {
+      "_type": "step",
+      "name": "<NAME>",
+      "threshold": "<THRESHOLD>",
+      "expected_materials": [
+         [ "<ARTIFACT_RULE>" ],
+         "..."
+      ],
+      "expected_products": [
+         [ "<ARTIFACT_RULE>" ],
+         "..."
+      ],
+      "pubkeys": [
+         "<KEYID>",
+         "..."
+      ],
+      "expected_command": "<COMMAND>"
+    }
+
+The expected_command field contains a command that suggests the action to be performed. It is important to note that this field supports substitution, allowing users to dynamically adjust commands based on environmental variables or other parameters.
+
+Example Usage:
+~~~~~~~~~~~~~~
+
+Dynamic Path Resolution
+~~~~~~~~~~~~~~~~~~~~~~~
+
+In scenarios where a build step in the supply chain necessitates a dependency whose path varies with the environment, users aim to ensure the correct dependency is utilized during the build process. This objective can be accomplished through the utilization of substitution.
+
+.. code-block:: json
+
+    {
+      "_type": "step",
+      "name": "build",
+      "threshold": 1,
+      "expected_materials": [
+         [ "MATCH /source_code/* WITH PRODUCTS FROM fetch_code" ],
+         [ "MATCH /dependencies/* WITH PRODUCTS FROM fetch_dependencies" ]
+      ],
+      "expected_products": [
+         [ "CREATE /compiled_code/*" ]
+      ],
+      "pubkeys": [
+         "pubkey-1"
+      ],
+      "expected_command": "gcc -o /compiled_code/output -I {{ DEPENDENCY_PATH }}/include <source_file>"
+    }
+
+In this example:
+
+- The expected_command field contains a command to compile the source code.
+- It includes a placeholder {{ DEPENDENCY_PATH }}, representing the path to the dependency.
+- During verification, the placeholder {{ DEPENDENCY_PATH }} will be dynamically replaced with the actual path to the dependency based on the environment.
+
+Using substitution in this manner enables the creation of flexible supply chain layouts that can adapt to various environments and configurations during the verification process.
+
+Using Substitution in Inspections
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In contrast to steps, inspections indicate operations that need to be performed on the final product at the time of verification. Inspections contain the following fields:
+
+.. code-block:: json
+
+    {
+      "_type": "inspection",
+      "name": "<NAME>",
+      "expected_materials": [
+         [ "<ARTIFACT_RULE>" ],
+         "..."
+      ],
+      "expected_products": [
+         [ "<ARTIFACT_RULE>" ],
+         "..."
+      ],
+      "run": "<COMMAND>"
+    }
+
+Similar to steps, the run field contains a command to be executed. Substitution can be applied to this field to customize the inspection process based on runtime conditions or configuration settings.
+
+Examples Usage
+~~~~~~~~~~~~~~
+
+Unpacking Archive
+~~~~~~~~~~~~~~~~~
+
+Suppose an inspection needs to unpack a tar archive to inspect its contents. The command for unpacking may vary depending on the environment. Substitution can be used to accommodate these variations:
+
+.. code-block:: json
+
+    {
+      "_type": "inspection",
+      "name": "unpack_archive",
+      "expected_materials": [
+         [ "MATCH /archive.tar WITH PRODUCTS FROM download_archive" ]
+      ],
+      "expected_products": [
+         [ "MATCH /unpacked_contents/* WITH PRODUCTS FROM unpack_archive" ]
+      ],
+      "run": "tar -xf <archive_file> -C <destination_dir>"
+    }
+
+In this example, <archive_file> and <destination_dir> are placeholders that will be substituted with actual values during verification.
