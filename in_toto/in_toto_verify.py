@@ -226,21 +226,22 @@ def main():
         LOG.info("Loading layout...")
         layout = Metadata.load(args.layout)
 
-        layout_key_dict = {}
+        layout_keys = []
         if args.gpg is not None:
             LOG.info("Loading layout gpg key(s)...")
-            layout_key_dict.update(
+            layout_keys.update(
                 gpg_interface.export_pubkeys(args.gpg, homedir=args.gpg_home)
             )
 
         if args.verification_keys:
             for path in args.verification_keys:
                 key = load_public_key_from_file(path)
-                layout_key_dict[key["keyid"]] = key
+                layout_keys.append(key)
+
 
         verifylib.in_toto_verify(
             layout,
-            layout_key_dict,
+            layout_keys,
             args.link_dir,
             inspect_timeout=args.inspect_timeout,
         )

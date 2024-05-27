@@ -358,11 +358,11 @@ def substitute_parameters(layout, parameter_dictionary):
         inspection.expected_products = new_product_rules
 
 
-def verify_metadata_signatures(metadata, keys_dict):
+def verify_metadata_signatures(metadata, keys):
     """
     <Purpose>
       Iteratively verifies the signatures of a Metadata object containing
-      a Layout object for every verification key in the passed keys dictionary.
+      a Layout object for every verification key in the passed keys list.
 
       Requires at least one key to be passed and requires every passed key to
       find a valid signature.
@@ -372,31 +372,29 @@ def verify_metadata_signatures(metadata, keys_dict):
               A Metadata object containing a Layout whose signatures are
               verified.
 
-      keys_dict:
-              A dictionary of keys to verify the signatures.
+      keys:
+              A list of Key instances to verify the signatures.
 
     <Exceptions>
       securesystemslib.exceptions.FormatError
-        if the passed key dict is invalid.
+        if the passed keys list is invalid.
 
       SignatureVerificationError
-        if an empty verification key dictionary was passed, or
+        if an empty verification key list was passed, or
         if any of the passed verification keys fails to verify a signature.
 
       securesystemslib._gpg.exceptions.KeyExpirationError:
         if any of the passed verification keys is an expired gpg key
 
     """
-    _check_public_keys(keys_dict)
-
-    # Fail if an empty verification key dictionary was passed
-    if len(keys_dict) < 1:
+    # Fail if an empty verification key list was passed
+    if len(keys) < 1:
         raise SignatureVerificationError(
             "Layout signature verification requires at least one key."
         )
 
     # Fail if any of the passed keys can't verify a signature on the Layout
-    for _, verify_key in keys_dict.items():
+    for verify_key in keys:
         metadata.verify_signature(verify_key)
 
 
