@@ -123,8 +123,11 @@ def _sign_and_dump_metadata(metadata, args):
             )
 
         # In case of layouts we just override the input file.
-        elif _type == "layout":  # pragma: no branch
+        elif _type == "layout":
             out_path = args.file
+
+        else:  # pragma: no cover
+            raise ValueError("invalid type {_type}")  # unreachable
 
         LOG.info("Dumping %s to '%s'...", _type, out_path)
 
