@@ -4,11 +4,11 @@
 #
 #    pip-compile --output-file=requirements-pinned.txt requirements.txt
 #
-attrs==24.1.0
+attrs==24.2.0
     # via -r requirements.txt
-cffi==1.16.0
+cffi==1.17.1
     # via cryptography
-cryptography==43.0.1
+cryptography==43.0.3
     # via securesystemslib
 iso8601==2.1.0
     # via -r requirements.txt
