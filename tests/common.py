@@ -141,9 +141,10 @@ class CliTestCase(unittest.TestCase):
         The passed args does not need to contain the command line tool's name.
         This is assessed from  `self.cli_main_func`
         """
-        with patch.object(
-            sys, "argv", [self.file_name] + cli_args
-        ), self.assertRaises(SystemExit) as raise_ctx:
+        with (
+            patch.object(sys, "argv", [self.file_name] + cli_args),
+            self.assertRaises(SystemExit) as raise_ctx,
+        ):
             self.cli_main_func()  # pylint: disable=not-callable
 
         self.assertEqual(raise_ctx.exception.code, status)

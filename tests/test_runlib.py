@@ -654,15 +654,16 @@ class TestSubprocess(unittest.TestCase):
         # Create and open fake targets for standard streams
         stdout_fd, stdout_fn = tempfile.mkstemp()
         stderr_fd, stderr_fn = tempfile.mkstemp()
-        with open(  # pylint: disable=unspecified-encoding
-            stdout_fn, "r"
-        ) as fake_stdout_reader, os.fdopen(
-            stdout_fd, "w"
-        ) as fake_stdout_writer, open(  # pylint: disable=unspecified-encoding
-            stderr_fn, "r"
-        ) as fake_stderr_reader, os.fdopen(
-            stderr_fd, "w"
-        ) as fake_stderr_writer:
+        with (
+            open(  # pylint: disable=unspecified-encoding
+                stdout_fn, "r"
+            ) as fake_stdout_reader,
+            os.fdopen(stdout_fd, "w") as fake_stdout_writer,
+            open(  # pylint: disable=unspecified-encoding
+                stderr_fn, "r"
+            ) as fake_stderr_reader,
+            os.fdopen(stderr_fd, "w") as fake_stderr_writer,
+        ):
             # Backup original standard streams and redirect to fake targets
             real_stdout = sys.stdout
             real_stderr = sys.stderr
