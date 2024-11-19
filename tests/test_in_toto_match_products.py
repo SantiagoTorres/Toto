@@ -43,9 +43,13 @@ class TestInTotoMatchProducts(unittest.TestCase):
 
         # Mock sys.argv in cli tool to mock cli invocation, and mock api
         # function to only check how it is called, w/o executing.
-        with patch.object(cli.sys, "argv", ["<cmd>"] + args), patch.object(
-            cli, "match_products", return_value=(set(),) * 3
-        ) as api, self.assertRaises(SystemExit):
+        with (
+            patch.object(cli.sys, "argv", ["<cmd>"] + args),
+            patch.object(
+                cli, "match_products", return_value=(set(),) * 3
+            ) as api,
+            self.assertRaises(SystemExit),
+        ):
             cli.main()
 
         api.assert_called_with(expected_arg, **expected_kwargs)
@@ -62,13 +66,13 @@ class TestInTotoMatchProducts(unittest.TestCase):
         # Mock sys.argv in cli tool to mock cli invocation, and mock api
         # function to control return values, w/o executing.
         for api_return_value, cli_return_code in test_data:
-            with patch.object(
-                cli.sys, "argv", ["<cmd>", "-l", self.link]
-            ), patch.object(
-                cli, "match_products", return_value=api_return_value
-            ), self.assertRaises(
-                SystemExit
-            ) as error_ctx:
+            with (
+                patch.object(cli.sys, "argv", ["<cmd>", "-l", self.link]),
+                patch.object(
+                    cli, "match_products", return_value=api_return_value
+                ),
+                self.assertRaises(SystemExit) as error_ctx,
+            ):
                 cli.main()
 
             self.assertEqual(

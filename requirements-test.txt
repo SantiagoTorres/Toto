@@ -2,4 +2,4 @@
 -r requirements-pinned.txt
 
 # Test tools for coverage measurement
-coverage==7.6.1
+coverage==7.6.4

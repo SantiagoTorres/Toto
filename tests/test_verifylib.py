@@ -1496,9 +1496,10 @@ class TestInTotoVerifyThresholdsGpgSubkeys(
             keys={expired_key_id: expired_key},
         )
 
-        with self.assertRaises(ThresholdVerificationError), patch(
-            "in_toto.verifylib.LOG"
-        ) as mock_log:
+        with (
+            self.assertRaises(ThresholdVerificationError),
+            patch("in_toto.verifylib.LOG") as mock_log,
+        ):
             verify_link_signature_thresholds(layout, chain_link_dict)
 
         self.assertEqual(mock_log.info.call_args[0][0], "Skipping link. %s")
