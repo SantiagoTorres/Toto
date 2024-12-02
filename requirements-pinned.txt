@@ -8,7 +8,7 @@ attrs==24.2.0
     # via -r requirements.txt
 cffi==1.17.1
     # via cryptography
-cryptography==43.0.3
+cryptography==44.0.0
     # via securesystemslib
 iso8601==2.1.0
     # via -r requirements.txt
