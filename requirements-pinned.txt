@@ -18,7 +18,7 @@ pycparser==2.22
     # via cffi
 python-dateutil==2.9.0.post0
     # via -r requirements.txt
-securesystemslib[crypto]==1.1.0
+securesystemslib[crypto]==1.2.0
     # via -r requirements.txt
-six==1.16.0
+six==1.17.0
     # via python-dateutil
