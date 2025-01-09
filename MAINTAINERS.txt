@@ -17,6 +17,14 @@ Maintainers:
     GitHub username: @JustinCappos
     PGP fingerprint: E9C0 59EC 0D32 64FA B35F  94AD 465B F9F6 F8EB 475A
 
+  Aditya Sirish A Yelgundhalli
+    Email: aditya.sirish@nyu.edu
+    GitHub username: @adityasaky
+    PGP fingerprint: E329 4129 9CB8 C0D9 3DCF 27AC B831 10D0 1254 5604
+
+
+Emeritus Maintainers:
+
   Marina Moore
     Email: mm9693@nyu.edu
     GitHub username: @mnm678
@@ -25,8 +33,3 @@ Maintainers:
     Email: sebastien.awwad@nyu.edu
     GitHub username: @awwad
     PGP fingerprint: C2FB 9C91 0758 B682 7BC4  3233 BC0C 6DED D5E5 CC03
-
-  Aditya Sirish A Yelgundhalli
-    Email: aditya.sirish@nyu.edu
-    GitHub username: @adityasaky
-    PGP fingerprint: E329 4129 9CB8 C0D9 3DCF 27AC B831 10D0 1254 5604
