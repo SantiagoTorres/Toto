@@ -3,6 +3,6 @@
 
 # Test tools for linting and test coverage measurement
 pylint==3.3.3
-bandit==1.8.0
+bandit==1.8.2
 black==24.10.0
 isort==5.13.2
