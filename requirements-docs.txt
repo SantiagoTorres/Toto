@@ -4,4 +4,4 @@
 # sphinx extensions
 sphinx-rtd-theme
 sphinx-argparse
-recommonmark
+myst-parser
