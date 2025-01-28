@@ -1,4 +1,4 @@
-## Artifact Exclude Patterns
+# Artifact Exclude Patterns
 
 The optional argument `exclude_patterns` in the `in_toto_run` API, also used by
 `--exclude` in the `in-toto-run` command line tool, applies
@@ -7,7 +7,7 @@ The optional argument `exclude_patterns` in the `in_toto_run` API, also used by
 (materials and products) matched by an exclude pattern are not recorded when
 generating link metadata.
 
-### Format Specification
+## Format Specification
 
 - Single asterisks match everything except a slash.
 - Question marks match any one character except a slash.
@@ -41,7 +41,7 @@ generating link metadata.
   particularly necessary for the context of exclude patterns. This can be
   escaped with a back-slash to match a literal exclamation mark (i.e., `\!`).
 
-### References
+## References
 
 - [`pathspec`](http://python-path-specification.readthedocs.io/)
 - [`gitignore`](https://git-scm.com/docs/gitignore)
