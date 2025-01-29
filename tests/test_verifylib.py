@@ -225,6 +225,31 @@ class TestVerifyCommandAlignment(unittest.TestCase):
                 self.command,
                 expected_command,
             )
+    
+    def test_commands_align_with_regex_1(self):
+        command = ["/usr/bin/vi", "file1", "file2"]
+        regex = True
+        expected_command = "(/usr/bin/)?vi file1 file2"
+        verify_command_alignment(command, expected_command, regex=regex)
+    
+    def test_commands_align_with_regex_2(self):
+        command = ["vi", "file1", "file2"]
+        regex = True
+        expected_command = "(/usr/bin/)?vi file1 file2"
+        verify_command_alignment(command, expected_command, regex=regex)
+
+    def test_commands_do_not_align_with_regex(self):
+        command = ["/usr/bin/diff", "file1", "file2"]
+        regex = True
+        expected_command = "(/usr/bin/)?vi file1 file2"
+        with patch("in_toto.verifylib.LOG") as mock_logging:
+            verify_command_alignment(command, expected_command, regex=regex)
+            mock_logging.warning.assert_called_with(
+                    "Run command '%s' differs from expected regex '%s'",
+                    command,
+                    expected_command,
+                )
+        
 
 
 class TestVerifyRule(unittest.TestCase):
