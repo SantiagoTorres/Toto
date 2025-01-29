@@ -15,6 +15,6 @@ found at `in-toto.io <https://in-toto.io>`_.
    api
    model
    configuration
-   layout-creation-example
+   examples
    Demo Supply Chain <https://github.com/in-toto/demo>
    CONTRIBUTING
